@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: neuronation
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+  neuronation:
+    depends_on:
+      - db
+    image: davidgonzalez1991/neuronation:latest
+    volumes:
+      - ./neuronation-app:/var/www/html
+      - ./config/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    restart: always
+    ports:
+      - "8000:80"
+volumes:
+  db_data:
